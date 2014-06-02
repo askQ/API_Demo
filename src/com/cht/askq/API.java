@@ -17,7 +17,7 @@ import org.json.JSONObject;
 import android.os.AsyncTask;
 import android.util.Log;
 
-public class API extends AsyncTask<String, Void, JSONObject> {
+public class API {
 
 	/* interface */
 	public interface OnSuccessListener {
@@ -53,11 +53,11 @@ public class API extends AsyncTask<String, Void, JSONObject> {
 		/* OP_ADD_CHOICE */      "add_choice.php",
 		/* OP_DELETE_QUESTION */ "delete_question.php",
 		/* OP FINISH_QUESTION */ "finish_question.php",
-		/* OP_VOTE_QUESTION */   "vote_question.php"
+		/* OP_VOTE_QUESTION */   "vote_question.php" 
 	};
 
 	private static String keys_list[][] = {
-		/* OP_REGISTER */        { "account", "password", "name", "sex", "email","birthtime", "pic", "extension" },
+		/* OP_REGISTER */        { "account", "password", "name", "sex", "email", "birthtime", "pic", "extension" },
 		/* OP_LOGIN */           { "account", "password", "type" },
 		/* OP_EDIT_INFO */       { "sessionid", "name", "password", "sex", "email", "birthtime", "pic", "extension" },
 		/* OP_QUERY_INFO */      { "sessionid" },
@@ -68,9 +68,9 @@ public class API extends AsyncTask<String, Void, JSONObject> {
 		/* OP_ADD_CHOICE */      { "sessionid", "questionid", "choice" },
 		/* OP_DELETE_QUESTION */ { "sessionid", "questionid" },
 		/* OP FINISH_QUESTION */ { "sessionid", "questionid", "choiceid", "command" },
-		/* OP_VOTE_QUESTION */   { "sessionid", "questionid", "choiceid", "command" }
+		/* OP_VOTE_QUESTION */   { "sessionid", "questionid", "choiceid", "command" } 
 	};
-	
+
 	private static JSONObject sendRequest(String php, String dataString) throws Exception {
 		HttpClient httpClient = new DefaultHttpClient();
 		HttpPost request = new HttpPost(serverURL + php);
@@ -100,8 +100,28 @@ public class API extends AsyncTask<String, Void, JSONObject> {
 		}
 	}
 
+	private class Task extends AsyncTask<String, Void, JSONObject> {
+		@Override
+		protected JSONObject doInBackground(String... params) {
+			try {
+				String reqString = genRequestByOperation(op, params);
+				return sendRequest(php_list[op], reqString);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(JSONObject result) {
+			callback.onSucess(result);
+			super.onPostExecute(result);
+		}
+	}
+
 	/* variables */
 	private int op;
+	private Task task;
 	private OnSuccessListener callback;
 
 	/* public functions */
@@ -113,21 +133,9 @@ public class API extends AsyncTask<String, Void, JSONObject> {
 		this.callback = callback;
 	}
 
-	@Override
-	protected JSONObject doInBackground(String... params) {
-		try {
-			String reqString = genRequestByOperation(op, params);
-			return sendRequest(php_list[op], reqString);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	@Override
-	protected void onPostExecute(JSONObject result) {
-		callback.onSucess(result);
-		super.onPostExecute(result);
+	public void start(String... params) {
+		task = new Task();
+		task.execute(params);
 	}
 
 }
