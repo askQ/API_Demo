@@ -17,6 +17,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TableRow.LayoutParams;
 
+import com.cht.askq.API.OnFailListener;
 import com.cht.askq.API.OnSuccessListener;
 
 public class API_Demo extends Activity {
@@ -53,6 +54,13 @@ public class API_Demo extends Activity {
 				}
 			}
 			textarea.setText(result.toString());
+		}
+	};
+
+	private OnFailListener defaultOnFail = new OnFailListener() {
+		@Override
+		public void onFail(String errorMsg) {
+			textarea.setText(errorMsg);
 		}
 	};
 
@@ -104,6 +112,7 @@ public class API_Demo extends Activity {
 				API api = new API();
 				api.setOperation(API.OP_REGISTER);
 				api.setOnSuccessListener(defaultOnSuccess);
+				api.setOnFailListener(defaultOnFail);
 				// { "account", "password", "name", "sex", "email","birthtime",
 				// "pic", "extension" },
 				api.start("ªü¨½¥¬¹F", "£u£u", "Tom5566", "00", "tom@cht.com", "1999/01/01", "", "");
@@ -119,6 +128,7 @@ public class API_Demo extends Activity {
 				API api = new API();
 				api.setOperation(API.OP_LOGIN);
 				api.setOnSuccessListener(defaultOnSuccess);
+				api.setOnFailListener(defaultOnFail);
 				// { "account", "password", "type" },
 				api.start("ªü¨½¥¬¹F", "£u£u", "01");
 			}
@@ -133,6 +143,7 @@ public class API_Demo extends Activity {
 				API api = new API();
 				api.setOperation(API.OP_EDIT_INFO);
 				api.setOnSuccessListener(defaultOnSuccess);
+				api.setOnFailListener(defaultOnFail);
 				// { "sessionid", "name", "password", "sex", "email",
 				// "birthtime", "pic", "extension" },
 				api.start(sessionid, "", "", "", "tom@cht.commm", "", "", "");
@@ -148,6 +159,7 @@ public class API_Demo extends Activity {
 				API api = new API();
 				api.setOperation(API.OP_QUERY_INFO);
 				api.setOnSuccessListener(defaultOnSuccess);
+				api.setOnFailListener(defaultOnFail);
 				// { "sessionid" },
 				api.start(sessionid);
 			}
@@ -162,6 +174,7 @@ public class API_Demo extends Activity {
 				API api = new API();
 				api.setOperation(API.OP_QUERY_TYPE);
 				api.setOnSuccessListener(defaultOnSuccess);
+				api.setOnFailListener(defaultOnFail);
 				// {},
 				api.start();
 			}
@@ -176,6 +189,7 @@ public class API_Demo extends Activity {
 				API api = new API();
 				api.setOperation(API.OP_QUERY_QUESTION);
 				api.setOnSuccessListener(defaultOnSuccess);
+				api.setOnFailListener(defaultOnFail);
 				// { "typeid", "starttime", "endtime" },
 				api.start("", "2014/05/26", "2014/05/28");
 			}
@@ -190,6 +204,7 @@ public class API_Demo extends Activity {
 				API api = new API();
 				api.setOperation(API.OP_QUERY_CONTENT);
 				api.setOnSuccessListener(defaultOnSuccess);
+				api.setOnFailListener(defaultOnFail);
 				// { "questionid" },
 				api.start("1");
 			}
@@ -204,6 +219,7 @@ public class API_Demo extends Activity {
 				API api = new API();
 				api.setOperation(API.OP_ASK_QUESTION);
 				api.setOnSuccessListener(defaultOnSuccess);
+				api.setOnFailListener(defaultOnFail);
 				// { "sessionid", "title", "typeid", "content", "endtime" },
 				api.start(sessionid, "ABC", "1", "CCCCC", "2014/12/31");
 			}
@@ -218,6 +234,7 @@ public class API_Demo extends Activity {
 				API api = new API();
 				api.setOperation(API.OP_ADD_CHOICE);
 				api.setOnSuccessListener(defaultOnSuccess);
+				api.setOnFailListener(defaultOnFail);
 				// { "sessionid", "questionid", "choice" },
 				api.start(sessionid, "1", "{\"title\":\"ttttt\"}");
 			}
@@ -232,6 +249,7 @@ public class API_Demo extends Activity {
 				API api = new API();
 				api.setOperation(API.OP_DELETE_QUESTION);
 				api.setOnSuccessListener(defaultOnSuccess);
+				api.setOnFailListener(defaultOnFail);
 				// { "sessionid", "questionid" },
 				api.start(sessionid, "1");
 			}
@@ -246,6 +264,7 @@ public class API_Demo extends Activity {
 				API api = new API();
 				api.setOperation(API.OP_FINISH_QUESTION);
 				api.setOnSuccessListener(defaultOnSuccess);
+				api.setOnFailListener(defaultOnFail);
 				// { "sessionid", "questionid", "choiceid", "command" },
 				api.start(sessionid, "1", "1", "oooo");
 			}
@@ -260,6 +279,7 @@ public class API_Demo extends Activity {
 				API api = new API();
 				api.setOperation(API.OP_VOTE_QUESTION);
 				api.setOnSuccessListener(defaultOnSuccess);
+				api.setOnFailListener(defaultOnFail);
 				// { "sessionid", "questionid", "choiceid", "command" }
 				api.start(sessionid, "1", "1", "xxxxxxx");
 			}

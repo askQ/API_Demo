@@ -12,6 +12,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.os.AsyncTask;
@@ -22,6 +23,10 @@ public class API {
 	/* interface */
 	public interface OnSuccessListener {
 		void onSucess(JSONObject result);
+	}
+
+	public interface OnFailListener {
+		void onFail(String errorMsg);
 	}
 
 	/* static variables and functions */
@@ -108,13 +113,27 @@ public class API {
 				return sendRequest(php_list[op], reqString);
 			} catch (Exception e) {
 				e.printStackTrace();
+				return null;
 			}
-			return null;
 		}
 
 		@Override
 		protected void onPostExecute(JSONObject result) {
-			callback.onSucess(result);
+			try {
+				if (result != null) {
+					if (result.getString("code").equals("0000")) {
+						success_callback.onSucess(result);
+					} else {
+						fail_callback.onFail(result.getString("message"));
+					}
+				} else {
+					fail_callback.onFail("Unknown Error");
+				}
+			} catch (JSONException e) {
+				e.printStackTrace();
+				fail_callback.onFail("Unknown Error");
+			}
+
 			super.onPostExecute(result);
 		}
 	}
@@ -122,7 +141,8 @@ public class API {
 	/* variables */
 	private int op;
 	private Task task;
-	private OnSuccessListener callback;
+	private OnSuccessListener success_callback;
+	private OnFailListener fail_callback;
 
 	/* public functions */
 	public void setOperation(int op) {
@@ -130,7 +150,11 @@ public class API {
 	}
 
 	public void setOnSuccessListener(OnSuccessListener callback) {
-		this.callback = callback;
+		this.success_callback = callback;
+	}
+
+	public void setOnFailListener(OnFailListener callback) {
+		this.fail_callback = callback;
 	}
 
 	public void start(String... params) {
