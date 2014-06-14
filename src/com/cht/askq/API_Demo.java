@@ -75,7 +75,7 @@ public class API_Demo extends Activity {
 		}
 		ll.addView(tl);
 		ll.addView(textarea, new LinearLayout.LayoutParams(
-				LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+				LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));
 		setContentView(ll);
 	}
 
